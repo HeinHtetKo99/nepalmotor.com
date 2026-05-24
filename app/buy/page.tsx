@@ -12,6 +12,7 @@ export default function BuyUsedCarPage() {
   return (
     <SiteShell
       title="Buy Used Car"
+      activeNav="buy"
       variant="form"
     >
       <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-sm sm:p-6">

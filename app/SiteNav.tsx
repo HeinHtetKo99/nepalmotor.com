@@ -53,19 +53,8 @@ type DrawerItemConfig = {
 const primaryItems: DrawerItemConfig[] = [
   { label: "Home", href: "/", navKey: "exchange", mode: "home" },
   { label: "Exchange to EV", href: "/exchange", navKey: "exchange", mode: "exchangeSvg" },
-  { label: "Sell Used Car", href: "/sell", navKey: "sell", mode: "sellSvg" },
   { label: "Buy Used Car", href: "/buy", navKey: "buy", mode: "key" },
-  { label: "Contact", mode: "callTel" },
-];
-
-const secondaryItems: DrawerItemConfig[] = [
-  { label: "About Us", href: "/about", navKey: "about", mode: "info" },
-  {
-    label: "Download App",
-    href: "/d",
-    navKey: "download",
-    mode: "download",
-  },
+  { label: "Sell Used Car", href: "/sell", navKey: "sell", mode: "sellSvg" },
   {
     label: "Free Test Drive",
     href: "/test-drive",
@@ -78,8 +67,19 @@ const secondaryItems: DrawerItemConfig[] = [
     navKey: "dealer",
     mode: "business",
   },
+];
+
+const secondaryItems: DrawerItemConfig[] = [
+  { label: "About Us", href: "/about", navKey: "about", mode: "info" },
+  {
+    label: "Download App",
+    href: "/d",
+    navKey: "download",
+    mode: "download",
+  },
   { label: "FAQs", href: "/faqs", navKey: "faqs", mode: "help" },
   { label: "Glossary", href: "/glossary", navKey: "glossary", mode: "book" },
+  { label: "Contact", mode: "callTel" },
 ];
 
 function isDrawerItemActive(pathname: string, item: DrawerItemConfig): boolean {

@@ -58,7 +58,7 @@ const missionText =
 
 export default function AboutPage() {
   return (
-    <SiteShell title="About" activeNav="about" variant="form">
+    <SiteShell title="About" variant="form">
       <div className="space-y-5 pb-2">
         <section className="rounded-[20px] border border-sky-200 bg-sky-50 px-5 py-8 text-center">
           <Image

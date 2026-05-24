@@ -9,12 +9,12 @@ const bottomNavItems: {
   key: NavKey;
   label: string;
   href: string;
-  icon: "exchange" | "faqs" | "sell" | "about" | "dealers";
+  icon: "exchange" | "buy" | "sell" | "testdrive" | "dealers";
 }[] = [
   { key: "exchange", label: "Exchange", href: "/", icon: "exchange" },
-  { key: "faqs", label: "FAQs", href: "/faqs", icon: "faqs" },
+  { key: "buy", label: "Buy", href: "/buy", icon: "buy" },
   { key: "sell", label: "Sell", href: "/sell", icon: "sell" },
-  { key: "about", label: "About", href: "/about", icon: "about" },
+  { key: "testdrive", label: "Test Drive", href: "/test-drive", icon: "testdrive" },
   { key: "dealers", label: "Dealers", href: "/dealers", icon: "dealers" },
 ];
 
@@ -30,41 +30,39 @@ export function BottomNav({ activeNav }: BottomNavProps) {
     if (key === "exchange") {
       return pathname === "/" || pathname.startsWith("/exchange");
     }
-    return pathname.startsWith(href);
+    if (key === "testdrive") {
+      return pathname.startsWith("/test-drive");
+    }
+    return pathname === href || pathname.startsWith(`${href}/`);
   };
 
   return (
-    <div
+    <footer
       className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom,0px)]"
-      aria-hidden={false}
+      aria-label="Bottom navigation"
     >
-      <div className="mx-auto flex w-full max-w-[564px] justify-center px-[10px] pt-1.5 pb-2 max-[400px]:px-1.5 sm:px-3 lg:max-w-6xl">
-        <nav
-          className="flex w-full min-h-16 items-stretch justify-between rounded-[18px] border border-slate-200 bg-white px-1.5 py-1.5 shadow-[0_8px_18px_rgba(0,0,0,0.18)]"
-          aria-label="Bottom navigation"
-        >
-          {bottomNavItems.map((item) => {
-            const active = isActive(item.key, item.href);
-            return (
-              <Link
-                key={item.key}
-                href={item.href}
-                className={
-                  active
-                    ? "flex min-h-[50px] min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl bg-sky-100 px-0.5 py-1 text-[#075985]"
-                    : "flex min-h-[50px] min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-1 text-[#64748b] transition-colors hover:bg-slate-50"
-                }
-                aria-current={active ? "page" : undefined}
-              >
-                <NavIcon name={item.icon} />
-                <span className="max-w-full truncate text-center text-[8.5px] font-extrabold leading-tight">
-                  {item.label}
-                </span>
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-    </div>
+      <nav className="mx-auto flex w-full max-w-[564px] min-h-[60px] items-stretch justify-between gap-0.5 px-1 pt-1 pb-1.5 lg:max-w-6xl">
+        {bottomNavItems.map((item) => {
+          const active = isActive(item.key, item.href);
+          return (
+            <Link
+              key={item.key}
+              href={item.href}
+              className={
+                active
+                  ? "flex min-h-[52px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-[14px] bg-sky-100 px-0.5 py-1 text-[#075985]"
+                  : "flex min-h-[52px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-[14px] px-0.5 py-1 text-[#64748b] transition-colors hover:bg-slate-50"
+              }
+              aria-current={active ? "page" : undefined}
+            >
+              <NavIcon name={item.icon} className="h-[22px] w-[22px] shrink-0" />
+              <span className="max-w-full truncate text-center text-[9px] font-extrabold leading-tight tracking-tight">
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
+      </nav>
+    </footer>
   );
 }

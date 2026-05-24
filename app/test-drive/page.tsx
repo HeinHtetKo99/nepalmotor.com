@@ -13,6 +13,7 @@ export default function TestDrivePage() {
     <SiteShell
       title="Free Test Drive"
       description="Fill out the form below to request a test drive. We will confirm your slot after we receive your details."
+      activeNav="testdrive"
       variant="form"
     >
       <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-sm sm:p-6">

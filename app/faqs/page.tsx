@@ -13,7 +13,6 @@ export default function FaqsPage() {
     <SiteShell
       title="Frequently Asked Questions"
       description="Answers about exchange, selling, buying, and our services."
-      activeNav="faqs"
     >
       <FaqAccordion />
     </SiteShell>

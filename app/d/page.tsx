@@ -18,38 +18,47 @@ const storeButtonClass =
 export default function DownloadAppPage() {
   return (
     <SiteShell title="Download App" compact>
-      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 bg-white px-2 pb-2">
-        <div className="relative w-full max-w-[min(96vw,420px)] flex-1 min-h-0 max-h-[min(72dvh,620px)]">
-          <Image
-            src="/app-download/phone-preview.png?v=3"
-            alt=""
-            fill
-            priority
-            unoptimized
-            sizes="(max-width: 640px) 96vw, 420px"
-            className="object-contain object-center"
-          />
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-between bg-white px-6 pb-4 pt-4 sm:px-10 sm:pt-6">
+        <div className="w-full shrink-0 pb-2 text-center">
+          <h1 className="text-xl font-bold tracking-tight text-[#020617] sm:text-2xl">
+            Download App
+          </h1>
         </div>
 
-        <div className="flex shrink-0 items-center justify-center gap-3 pb-1">
-          <a
-            href={PLAY_STORE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Get it on Google Play"
-            className={storeButtonClass}
-          >
-            <PlayStoreIcon className="h-7 w-7" />
-          </a>
-          <a
-            href={APP_STORE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Download on the App Store"
-            className={storeButtonClass}
-          >
-            <AppStoreIcon className="h-7 w-7 text-slate-900" />
-          </a>
+        <figure className="flex min-h-0 flex-1 flex-col items-center justify-center">
+          <div className="w-full max-w-[min(78vw,300px)] p-4 sm:max-w-[320px] sm:p-5">
+            <Image
+              src="/app-download/download-qr.png"
+              alt="Scan to download the NEPAL Motor app on Google Play"
+              width={1024}
+              height={1024}
+              priority
+              className="h-auto w-full object-contain"
+            />
+          </div>
+        </figure>
+
+        <div className="flex w-full shrink-0 flex-col items-center gap-5 pt-2">
+          <div className="flex items-center justify-center gap-3">
+            <a
+              href={PLAY_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Get it on Google Play"
+              className={storeButtonClass}
+            >
+              <PlayStoreIcon className="h-7 w-7" />
+            </a>
+            <a
+              href={APP_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Download on the App Store"
+              className={storeButtonClass}
+            >
+              <AppStoreIcon className="h-7 w-7 text-slate-900" />
+            </a>
+          </div>
         </div>
       </div>
     </SiteShell>

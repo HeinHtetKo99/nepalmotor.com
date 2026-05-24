@@ -7,7 +7,12 @@ export const CALL_URL = "https://b.broadpress.org/nepalmotorcall";
 /** Mobile app width on small screens; full desktop width from lg up */
 export const SITE_MAX_WIDTH_CLASS = "max-w-[564px] lg:max-w-6xl";
 
-export type NavKey = "exchange" | "faqs" | "sell" | "about" | "dealers";
+export type NavKey =
+  | "exchange"
+  | "buy"
+  | "sell"
+  | "testdrive"
+  | "dealers";
 
 type SiteShellProps = {
   title: string;

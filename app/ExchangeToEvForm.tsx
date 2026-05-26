@@ -18,6 +18,7 @@ import {
   textInputClass,
 } from "./form-controls";
 import { FormLegalConsent, LEGAL_CONSENT_ERROR } from "./FormLegalConsent";
+import { useOtpVerification } from "./OtpVerificationProvider";
 import { emailValidationError } from "@/lib/form-validation";
 import {
   INTERESTED_EV_BRAND_OPTIONS,
@@ -40,6 +41,8 @@ function yearRangeError(value: string): string | null {
 }
 
 const onlyDigits = (v: string) => v.replace(/[^0-9]/g, "");
+
+const PHONE_ERROR = "Enter valid 10-digit phone number";
 
 const CITIES = [
   "Itahari",
@@ -240,12 +243,14 @@ export function ExchangeToEvForm({ variant = "exchange" }: ExchangeToEvFormProps
   const [submitting, setSubmitting] = useState(false);
   const [yearError, setYearError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
 
   const docInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
   const featuresPickerRef = useRef<HTMLDivElement>(null);
+  const otp = useOtpVerification();
 
   const clear = useCallback(() => {
     setFullName("");
@@ -272,6 +277,7 @@ export function ExchangeToEvForm({ variant = "exchange" }: ExchangeToEvFormProps
     setAgreedToLegal(false);
     setYearError(null);
     setEmailError(null);
+    setPhoneError(null);
     setSubmitError(null);
     setSubmitSuccess(null);
     if (docInputRef.current) docInputRef.current.value = "";
@@ -321,9 +327,15 @@ export function ExchangeToEvForm({ variant = "exchange" }: ExchangeToEvFormProps
     setSubmitError(null);
     setSubmitSuccess(null);
 
+    if (!phone || phone.length !== 10) {
+      setPhoneError(PHONE_ERROR);
+      setSubmitError(PHONE_ERROR);
+      return;
+    }
+    setPhoneError(null);
+
     if (
       !fullName.trim() ||
-      !phone.trim() ||
       !city ||
       !year.trim() ||
       !vehicleType ||
@@ -397,45 +409,49 @@ export function ExchangeToEvForm({ variant = "exchange" }: ExchangeToEvFormProps
     for (const file of docFiles) body.append("documents", file);
     for (const file of photoFiles) body.append("photos", file);
 
-    setSubmitting(true);
-    try {
-      const res = await fetch("/api/vehicle-listings", {
-        method: "POST",
-        body,
-      });
-      const data = (await res.json()) as {
-        ok?: boolean;
-        error?: string;
-        warning?: string;
-        unmatchedFeatures?: string[];
-        featuresColumn?: string;
-      };
+    await otp.request(phone.trim(), async () => {
+      setSubmitting(true);
+      try {
+        const res = await fetch("/api/vehicle-listings", {
+          method: "POST",
+          body,
+        });
+        const data = (await res.json()) as {
+          ok?: boolean;
+          error?: string;
+          warning?: string;
+          unmatchedFeatures?: string[];
+          featuresColumn?: string;
+        };
 
-      if (!res.ok) {
-        const unmatchedFeatures = data.unmatchedFeatures ?? [];
-        if (res.status === 400 && unmatchedFeatures.length > 0) {
-          const fieldLabel = data.featuresColumn ?? "Features";
-          setSubmitError(
-            `These features are not allowed in "${fieldLabel}": ${unmatchedFeatures.join(", ")}.`,
-          );
+        if (!res.ok) {
+          const unmatchedFeatures = data.unmatchedFeatures ?? [];
+          if (res.status === 400 && unmatchedFeatures.length > 0) {
+            const fieldLabel = data.featuresColumn ?? "Features";
+            setSubmitError(
+              `These features are not allowed in "${fieldLabel}": ${unmatchedFeatures.join(", ")}.`,
+            );
+            return;
+          }
+          setSubmitError(data.error ?? "Submission failed. Please try again.");
           return;
         }
-        setSubmitError(data.error ?? "Submission failed. Please try again.");
-        return;
-      }
 
-      const message =
-        data.warning ??
-        (isSellForm
-          ? "Thank you! Your sell used car request has been submitted."
-          : "Thank you! Your exchange request has been submitted.");
-      clear();
-      setSubmitSuccess(message);
-    } catch {
-      setSubmitError("Network error. Please check your connection and try again.");
-    } finally {
-      setSubmitting(false);
-    }
+        const message =
+          data.warning ??
+          (isSellForm
+            ? "Thank you! Your sell used car request has been submitted."
+            : "Thank you! Your exchange request has been submitted.");
+        clear();
+        setSubmitSuccess(message);
+      } catch {
+        setSubmitError(
+          "Network error. Please check your connection and try again.",
+        );
+      } finally {
+        setSubmitting(false);
+      }
+    });
   };
 
   return (
@@ -492,12 +508,24 @@ export function ExchangeToEvForm({ variant = "exchange" }: ExchangeToEvFormProps
         <input
           id={`${formId}-phone`}
           type="tel"
+          inputMode="numeric"
+          maxLength={10}
           className={textInputClass()}
           style={{ borderColor: BORDER }}
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={(e) => {
+            setPhone(onlyDigits(e.target.value).slice(0, 10));
+            setPhoneError(null);
+          }}
           autoComplete="tel"
+          aria-invalid={phoneError ? true : undefined}
+          aria-describedby={phoneError ? `${formId}-phone-error` : undefined}
         />
+        {phoneError ? (
+          <p id={`${formId}-phone-error`} className="text-[12px] text-red-600">
+            {phoneError}
+          </p>
+        ) : null}
       </div>
 
       <PillSelect

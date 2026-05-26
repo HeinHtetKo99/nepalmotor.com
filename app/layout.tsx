@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { GoogleAnalytics } from "./GoogleAnalytics";
+import { OtpVerificationProvider } from "./OtpVerificationProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -63,7 +64,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <GoogleAnalytics />
-        {children}
+        <OtpVerificationProvider>{children}</OtpVerificationProvider>
       </body>
     </html>
   );

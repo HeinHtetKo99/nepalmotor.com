@@ -11,6 +11,7 @@ import {
   textInputClass,
 } from "./form-controls";
 import { FormLegalConsent, LEGAL_CONSENT_ERROR } from "./FormLegalConsent";
+import { useOtpVerification } from "./OtpVerificationProvider";
 
 const CITIES = [
   "Itahari",
@@ -54,6 +55,7 @@ export function BecomeADealerForm() {
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
 
   const photoInputRef = useRef<HTMLInputElement>(null);
+  const otp = useOtpVerification();
 
   const clear = useCallback(() => {
     setFullName("");
@@ -115,43 +117,46 @@ export function BecomeADealerForm() {
       return;
     }
 
-    setSubmitting(true);
-    try {
-      const data = new FormData();
-      data.append("fullName", fullName.trim());
-      data.append("companyName", companyName.trim());
-      data.append("city", city);
-      data.append("phone", phone.trim());
-      for (const file of photos) {
-        data.append("photos", file, file.name);
+    await otp.request(phone.trim(), async () => {
+      setSubmitting(true);
+      try {
+        const data = new FormData();
+        data.append("fullName", fullName.trim());
+        data.append("companyName", companyName.trim());
+        data.append("city", city);
+        data.append("phone", phone.trim());
+        for (const file of photos) {
+          data.append("photos", file, file.name);
+        }
+
+        const res = await fetch("/api/become-a-dealer", {
+          method: "POST",
+          body: data,
+        });
+        const json = (await res.json()) as {
+          ok?: boolean;
+          error?: string;
+          warning?: string;
+        };
+
+        if (!res.ok) {
+          setSubmitError(json.error ?? "Submission failed. Please try again.");
+          return;
+        }
+
+        clear();
+        setSubmitSuccess(
+          json.warning ??
+            "Thank you! Your dealer application has been submitted.",
+        );
+      } catch {
+        setSubmitError(
+          "Network error. Please check your connection and try again.",
+        );
+      } finally {
+        setSubmitting(false);
       }
-
-      const res = await fetch("/api/become-a-dealer", {
-        method: "POST",
-        body: data,
-      });
-      const json = (await res.json()) as {
-        ok?: boolean;
-        error?: string;
-        warning?: string;
-      };
-
-      if (!res.ok) {
-        setSubmitError(json.error ?? "Submission failed. Please try again.");
-        return;
-      }
-
-      clear();
-      setSubmitSuccess(
-        json.warning ?? "Thank you! Your dealer application has been submitted.",
-      );
-    } catch {
-      setSubmitError(
-        "Network error. Please check your connection and try again.",
-      );
-    } finally {
-      setSubmitting(false);
-    }
+    });
   };
 
   return (

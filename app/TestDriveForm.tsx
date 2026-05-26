@@ -18,6 +18,7 @@ import {
   textInputClass,
 } from "./form-controls";
 import { FormLegalConsent, LEGAL_CONSENT_ERROR } from "./FormLegalConsent";
+import { useOtpVerification } from "./OtpVerificationProvider";
 import { emailValidationError } from "@/lib/form-validation";
 
 const CITIES = [
@@ -114,6 +115,7 @@ export function TestDriveForm() {
   const [emailError, setEmailError] = useState<string | null>(null);
 
   const featuresPickerRef = useRef<HTMLDivElement>(null);
+  const otp = useOtpVerification();
 
   const clear = useCallback(() => {
     setFullName("");
@@ -188,45 +190,47 @@ export function TestDriveForm() {
       return;
     }
 
-    setSubmitting(true);
-    try {
-      const res = await fetch("/api/test-drive", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: fullName.trim(),
-          email: email.trim(),
-          phone: phone.trim(),
-          city,
-          vehicleType,
-          vehicleModel: vehicleModel.trim(),
-          vehicleBrand: vehicleBrand.trim(),
-          vehicleColor,
-          transmission,
-          fuelType,
-          features,
-          finance,
-          notes: notes.trim(),
-        }),
-      });
-      const data = (await res.json()) as { ok?: boolean; error?: string };
+    await otp.request(phone.trim(), async () => {
+      setSubmitting(true);
+      try {
+        const res = await fetch("/api/test-drive", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fullName: fullName.trim(),
+            email: email.trim(),
+            phone: phone.trim(),
+            city,
+            vehicleType,
+            vehicleModel: vehicleModel.trim(),
+            vehicleBrand: vehicleBrand.trim(),
+            vehicleColor,
+            transmission,
+            fuelType,
+            features,
+            finance,
+            notes: notes.trim(),
+          }),
+        });
+        const data = (await res.json()) as { ok?: boolean; error?: string };
 
-      if (!res.ok) {
-        setSubmitError(data.error ?? "Submission failed. Please try again.");
-        return;
+        if (!res.ok) {
+          setSubmitError(data.error ?? "Submission failed. Please try again.");
+          return;
+        }
+
+        clear();
+        setSubmitSuccess(
+          "Thank you! Your test drive request has been submitted.",
+        );
+      } catch {
+        setSubmitError(
+          "Network error. Please check your connection and try again.",
+        );
+      } finally {
+        setSubmitting(false);
       }
-
-      clear();
-      setSubmitSuccess(
-        "Thank you! Your test drive request has been submitted.",
-      );
-    } catch {
-      setSubmitError(
-        "Network error. Please check your connection and try again.",
-      );
-    } finally {
-      setSubmitting(false);
-    }
+    });
   };
 
   return (

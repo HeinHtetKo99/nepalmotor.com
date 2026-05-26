@@ -48,3 +48,196 @@ body {
     grid-column: 1 / -1;
   }
 }
+
+/* OTP verification modal — matches React-Project mobile app */
+.nm-otp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.nm-otp-scrim {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+}
+
+.nm-otp-modal {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 360px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px 24px 28px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.nm-otp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.nm-otp-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: #020617;
+}
+
+.nm-otp-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.nm-otp-close:hover {
+  background: #f1f5f9;
+}
+
+.nm-otp-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 32px;
+  background: #e0f2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.nm-otp-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: #475569;
+  text-align: center;
+  font-weight: 600;
+}
+
+.nm-otp-phone {
+  margin: 4px 0 20px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #020617;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.nm-otp-box-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.nm-otp-box {
+  width: 44px;
+  height: 52px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: #020617;
+  background: #f8fafc;
+  padding: 0;
+  outline: none;
+}
+
+.nm-otp-box:focus {
+  border-color: #075985;
+  background: #eff6ff;
+}
+
+.nm-otp-box-filled {
+  border-color: #075985;
+  background: #eff6ff;
+}
+
+.nm-otp-box-error {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.nm-otp-error {
+  margin: 0 0 10px;
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.nm-otp-verify {
+  display: block;
+  width: 100%;
+  background: #075985;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-bottom: 14px;
+}
+
+.nm-otp-verify:hover:not(:disabled) {
+  background: #0c4a6e;
+}
+
+.nm-otp-verify-disabled,
+.nm-otp-verify:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+.nm-otp-resend-row {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.nm-otp-resend-timer {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.nm-otp-resend-link {
+  border: none;
+  background: none;
+  padding: 0;
+  color: #075985;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.nm-otp-resend-link:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.nm-otp-note {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+}

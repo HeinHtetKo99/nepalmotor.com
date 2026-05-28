@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Mobile app API
+
+Share **[docs/MOBILE_API.md](docs/MOBILE_API.md)** with the mobile developer. It documents all form submission endpoints, OTP, CORS, and automatic admin SMS on successful submit (no extra API call from the app).
+
 ## Getting Started
 
 First, run the development server:

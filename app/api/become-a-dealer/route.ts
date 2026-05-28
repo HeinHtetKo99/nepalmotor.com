@@ -1,15 +1,13 @@
-import {
-  CORS_HEADERS,
-  handleBecomeADealerSubmission,
-} from "@/lib/submit-become-a-dealer";
+import { corsPreflightResponse, withCors } from "@/lib/api-cors";
+import { handleBecomeADealerSubmission } from "@/lib/submit-become-a-dealer";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  return handleBecomeADealerSubmission(request);
+  return withCors(await handleBecomeADealerSubmission(request));
 }
 
 export async function OPTIONS() {
-  return new Response(null, { status: 204, headers: CORS_HEADERS });
+  return corsPreflightResponse();
 }

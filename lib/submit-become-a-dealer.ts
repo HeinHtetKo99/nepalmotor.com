@@ -9,6 +9,8 @@ import {
   getAirtableEnv,
 } from "@/lib/airtable-env";
 import { publishFilesForAirtable } from "@/lib/attachment-staging";
+import { notifyFormSubmission } from "@/lib/form-submission-notify";
+import { CORS_HEADERS } from "@/lib/api-cors";
 import { emailValidationError } from "@/lib/form-validation";
 
 const AIRTABLE_API = "https://api.airtable.com/v0";
@@ -54,13 +56,6 @@ const PHOTO_FIELD_CANDIDATES = [
   "Upload Photo",
   "Attachments",
 ];
-
-export const CORS_HEADERS: Record<string, string> = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  "Access-Control-Max-Age": "86400",
-};
 
 function readDealersTableName(): string {
   const nameRaw = process.env["AIRTABLE_DEALERS_TABLE_NAME"];
@@ -559,6 +554,12 @@ export async function handleBecomeADealerSubmission(
   if (photoUpload.failures.length > 0) {
     body.warning = `Saved, but these photos could not be uploaded to Airtable: ${photoUpload.failures.join(", ")}. Verify the "${configuredName}" table has an attachment column named one of: ${PHOTO_FIELD_CANDIDATES.join(", ")}.`;
   }
+
+  await notifyFormSubmission({
+    kind: "dealer",
+    fullName,
+    phone,
+  });
 
   return NextResponse.json(body, { headers: CORS_HEADERS });
 }

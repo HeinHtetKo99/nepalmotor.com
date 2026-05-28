@@ -7,6 +7,7 @@ import {
   formatAirtableEnvError,
   getAirtableEnv,
 } from "@/lib/airtable-env";
+import { notifyFormSubmission } from "@/lib/form-submission-notify";
 import { emailValidationError } from "@/lib/form-validation";
 
 /**
@@ -281,6 +282,12 @@ export async function handleBuyUsedCarsSubmission(
   if ("error" in result) {
     return NextResponse.json({ error: result.error }, { status: 502 });
   }
+
+  await notifyFormSubmission({
+    kind: "buy",
+    fullName,
+    phone,
+  });
 
   return NextResponse.json({ ok: true as const });
 }

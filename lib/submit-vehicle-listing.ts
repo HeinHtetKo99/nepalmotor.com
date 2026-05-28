@@ -14,8 +14,10 @@ import {
   getAirtableEnv,
 } from "@/lib/airtable-env";
 import { publishFilesForAirtable } from "@/lib/attachment-staging";
+import { notifyFormSubmission } from "@/lib/form-submission-notify";
 import {
   diagnosePhotoUploadForm,
+  getFirstFormString,
   parseAttachmentsFromForm,
   parseEvBrandFromForm,
   parseFeaturesFromForm,
@@ -211,6 +213,18 @@ export async function handleVehicleListingSubmission(
       photoDiagnostic.hint =
         "Photos were parsed but no photo attachment column was found in the Airtable table.";
     }
+
+    const requestType = getFirstFormString(form, [
+      "requestType",
+      "request_type",
+    ]);
+    const kind =
+      requestType === "Sell Used Car" ? ("sell" as const) : ("exchange" as const);
+    await notifyFormSubmission({
+      kind,
+      fullName: payload.fullName,
+      phone: payload.phone,
+    });
 
     const responseBody = {
       ok: true as const,

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { generateOtpCode, setOtp, verifyOtp } from "./otp-store";
+import { CORS_HEADERS } from "./api-cors";
+import { normalizeSparrowToken, sendSparrowSms } from "./sparrow-sms";
 
 /**
  * Shared OTP service used by the Next.js API routes.
@@ -9,11 +11,7 @@ import { generateOtpCode, setOtp, verifyOtp } from "./otp-store";
 
 export const OTP_LENGTH = 4;
 
-export const CORS_HEADERS: Record<string, string> = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+export { CORS_HEADERS } from "./api-cors";
 
 function jsonResponse<T extends object>(body: T, status = 200) {
   return NextResponse.json(body, { status, headers: CORS_HEADERS });
@@ -27,28 +25,8 @@ function normalizePhone(raw: string | undefined): string | null {
 
 type SmsResult = { ok: true } | { ok: false; reason: string };
 
-/**
- * Sends the OTP via Sparrow SMS when SPARROW_SMS_TOKEN is configured.
- * Falls back to a console log in development so the flow remains testable
- * without SMS credits.
- *
- * Sparrow SMS v2 endpoint: https://api.sparrowsms.com/v2/sms/
- *   POST form-urlencoded: token, from, to (10-digit), text
- *   Success when JSON response has response_code === 200
- */
-/** Strip accidental "(NepalMotor)" label copied from the Sparrow dashboard dialog. */
-function normalizeSparrowToken(raw: string | undefined): string {
-  if (!raw) return "";
-  let t = raw.trim();
-  const label = t.match(/^(.+?)\s*\([^)]+\)\s*$/);
-  if (label) t = label[1].trim();
-  return t;
-}
-
 async function sendSms(phone: string, code: string): Promise<SmsResult> {
   const token = normalizeSparrowToken(process.env.SPARROW_SMS_TOKEN);
-  const from = (process.env.SPARROW_SMS_FROM ?? "Demo").trim();
-
   const text = `Your NEPAL Motor verification code is ${code}. It expires in 10 minutes.`;
 
   if (!token) {
@@ -58,57 +36,7 @@ async function sendSms(phone: string, code: string): Promise<SmsResult> {
     return { ok: true };
   }
 
-  if (process.env.NODE_ENV !== "production") {
-    // Print enough to verify the right token is loaded without leaking it fully.
-    console.log(
-      `[Sparrow SMS] sending from "${from}" with token ${token.slice(0, 4)}…${token.slice(-2)} (len ${token.length})`,
-    );
-  }
-
-  try {
-    const params = new URLSearchParams();
-    params.set("token", token);
-    params.set("from", from);
-    params.set("to", phone);
-    params.set("text", text);
-
-    const resp = await fetch("https://api.sparrowsms.com/v2/sms/", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: params.toString(),
-    });
-
-    const raw = await resp.text();
-    let data: {
-      response_code?: number;
-      response?: string;
-      message_id?: string | number;
-    } | null = null;
-    try {
-      data = JSON.parse(raw);
-    } catch {
-      data = null;
-    }
-
-    if (process.env.NODE_ENV !== "production") {
-      console.log(`[Sparrow SMS] HTTP ${resp.status} →`, data ?? raw);
-    }
-
-    if (!resp.ok || !data || data.response_code !== 200) {
-      const reason =
-        (data && (data.response || `code ${data.response_code}`)) ||
-        raw.slice(0, 200) ||
-        `HTTP ${resp.status}`;
-      console.error("Sparrow SMS rejected:", reason);
-      return { ok: false, reason };
-    }
-
-    return { ok: true };
-  } catch (err) {
-    const reason = err instanceof Error ? err.message : "Network error";
-    console.error("Sparrow SMS request failed:", reason);
-    return { ok: false, reason };
-  }
+  return sendSparrowSms(phone, text);
 }
 
 export async function handleSendOtp(request: Request) {

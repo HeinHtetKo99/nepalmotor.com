@@ -16,7 +16,7 @@ Native React Native apps do not need CORS. WebViews or Expo web should send a pr
 
 There is **no separate SMS API** for the mobile app to call.
 
-When any form below returns **`{ "ok": true }`** (or `{ "ok": true, "recordId": "...", ... }` for multipart forms), the server automatically sends an admin SMS to **9952024365** and **9852031716** via Sparrow SMS.
+When any form below returns **`{ "ok": true }`** (or `{ "ok": true, "recordId": "...", ... }` for multipart forms), the server automatically sends an admin SMS to **9852024365** and **9852031716** via Sparrow SMS.
 
 Message format:
 

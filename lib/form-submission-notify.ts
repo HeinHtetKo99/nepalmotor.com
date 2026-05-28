@@ -1,6 +1,6 @@
 import { normalizeSparrowToken, sendSparrowSms } from "@/lib/sparrow-sms";
 
-const DEFAULT_NOTIFY_TO = ["9952024365", "9852031716"] as const;
+const DEFAULT_NOTIFY_TO = ["9852024365", "9852031716"] as const;
 
 export type FormNotifyKind =
   | "exchange"

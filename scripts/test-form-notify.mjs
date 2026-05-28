@@ -45,12 +45,12 @@ function normalizeSparrowToken(raw) {
 
 const token = normalizeSparrowToken(process.env.SPARROW_SMS_TOKEN);
 const from = (process.env.SPARROW_SMS_FROM ?? "Demo").trim();
-const defaultTo = "9952024365,9852031716";
+const defaultTo = "9852024365,9852031716";
 const recipients = (process.env.FORM_NOTIFY_SMS_TO ?? defaultTo)
   .split(/[,;\s]+/)
   .map((p) => p.replace(/\D/g, "").slice(-10))
   .filter((d) => d.length === 10);
-const to = recipients[0] ?? "9952024365";
+const to = recipients[0] ?? "9852024365";
 
 const fullName = "Test User";
 const phone = "9811111111";

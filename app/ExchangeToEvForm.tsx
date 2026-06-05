@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useRouter } from "next/navigation";
 import {
   BORDER,
   FORM_FIELD_FULL_CLASS,
@@ -245,12 +246,12 @@ export function ExchangeToEvForm({ variant = "exchange" }: ExchangeToEvFormProps
   const [emailError, setEmailError] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
 
   const docInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
   const featuresPickerRef = useRef<HTMLDivElement>(null);
   const otp = useOtpVerification();
+  const router = useRouter();
 
   const clear = useCallback(() => {
     setFullName("");
@@ -279,7 +280,6 @@ export function ExchangeToEvForm({ variant = "exchange" }: ExchangeToEvFormProps
     setEmailError(null);
     setPhoneError(null);
     setSubmitError(null);
-    setSubmitSuccess(null);
     if (docInputRef.current) docInputRef.current.value = "";
     if (photoInputRef.current) photoInputRef.current.value = "";
   }, []);
@@ -325,7 +325,6 @@ export function ExchangeToEvForm({ variant = "exchange" }: ExchangeToEvFormProps
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
-    setSubmitSuccess(null);
 
     if (!phone || phone.length !== 10) {
       setPhoneError(PHONE_ERROR);
@@ -437,13 +436,8 @@ export function ExchangeToEvForm({ variant = "exchange" }: ExchangeToEvFormProps
           return;
         }
 
-        const message =
-          data.warning ??
-          (isSellForm
-            ? "Thank you! Your sell used car request has been submitted."
-            : "Thank you! Your exchange request has been submitted.");
         clear();
-        setSubmitSuccess(message);
+        router.push("/d");
       } catch {
         setSubmitError(
           "Network error. Please check your connection and try again.",
@@ -864,14 +858,6 @@ export function ExchangeToEvForm({ variant = "exchange" }: ExchangeToEvFormProps
           className={`rounded-md border border-red-200 bg-red-50 px-3 py-2 text-[13px] text-red-800 ${FORM_FIELD_FULL_CLASS}`}
         >
           {submitError}
-        </p>
-      ) : null}
-      {submitSuccess ? (
-        <p
-          role="status"
-          className={`rounded-md border border-green-200 bg-green-50 px-3 py-2 text-[13px] text-green-800 ${FORM_FIELD_FULL_CLASS}`}
-        >
-          {submitSuccess}
         </p>
       ) : null}
 

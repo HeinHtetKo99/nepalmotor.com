@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useRouter } from "next/navigation";
 import {
   BORDER,
   FORM_FIELD_FULL_CLASS,
@@ -110,12 +111,12 @@ export function TestDriveForm() {
   const [agreedToLegal, setAgreedToLegal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
   const [modelError, setModelError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
 
   const featuresPickerRef = useRef<HTMLDivElement>(null);
   const otp = useOtpVerification();
+  const router = useRouter();
 
   const clear = useCallback(() => {
     setFullName("");
@@ -134,7 +135,6 @@ export function TestDriveForm() {
     setNotes("");
     setAgreedToLegal(false);
     setSubmitError(null);
-    setSubmitSuccess(null);
     setModelError(null);
     setEmailError(null);
   }, []);
@@ -156,7 +156,6 @@ export function TestDriveForm() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
-    setSubmitSuccess(null);
 
     if (
       !fullName.trim() ||
@@ -220,9 +219,7 @@ export function TestDriveForm() {
         }
 
         clear();
-        setSubmitSuccess(
-          "Thank you! Your test drive request has been submitted.",
-        );
+        router.push("/d");
       } catch {
         setSubmitError(
           "Network error. Please check your connection and try again.",
@@ -472,14 +469,6 @@ export function TestDriveForm() {
           className={`rounded-md border border-red-200 bg-red-50 px-3 py-2 text-[13px] text-red-800 ${FORM_FIELD_FULL_CLASS}`}
         >
           {submitError}
-        </p>
-      ) : null}
-      {submitSuccess ? (
-        <p
-          role="status"
-          className={`rounded-md border border-green-200 bg-green-50 px-3 py-2 text-[13px] text-green-800 ${FORM_FIELD_FULL_CLASS}`}
-        >
-          {submitSuccess}
         </p>
       ) : null}
 

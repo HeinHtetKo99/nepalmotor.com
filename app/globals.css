@@ -241,3 +241,16 @@ body {
   font-weight: 600;
   text-align: center;
 }
+
+/* OneSignal prompts above fixed bottom nav (z-50) */
+#onesignal-slidedown-container,
+#onesignal-bell-launcher,
+.onesignal-customlink-container {
+  z-index: 10000 !important;
+}
+
+@media (max-width: 768px) {
+  #onesignal-slidedown-container {
+    bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}

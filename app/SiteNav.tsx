@@ -142,11 +142,11 @@ export function SiteNav() {
             onClick={closeDrawer}
           >
             <Image
-              src="/logo.jpeg"
+              src="/logo.png"
               alt="NEPAL Motor"
               width={50}
               height={50}
-              className="h-[50px] w-[50px] shrink-0 rounded-full border border-gray-200 object-cover"
+              className="h-[50px] w-[50px] shrink-0 rounded-full object-cover"
               priority
             />
             <span className="min-w-0 whitespace-nowrap text-[25px] font-extrabold leading-tight text-[#020617]">
@@ -194,11 +194,11 @@ export function SiteNav() {
             >
             <div className="flex flex-row items-center gap-2.5 px-3.5 pb-2.5 pt-3">
               <Image
-                src="/logo.jpeg"
+                src="/logo.png"
                 alt=""
                 width={42}
                 height={42}
-                className="h-[42px] w-[42px] shrink-0 rounded-full border border-slate-200 object-cover"
+                className="h-[42px] w-[42px] shrink-0 rounded-full object-cover"
               />
               <span className="min-w-0 flex-1 truncate text-[17px] font-black text-[#075985]">
                 NEPAL Motor

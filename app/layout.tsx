@@ -33,9 +33,9 @@ export const metadata: Metadata = {
   title: siteTitle,
   description: siteDescription,
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
+    icon: "/favicon.png?v=3",
+    shortcut: "/favicon.png?v=3",
+    apple: "/apple-touch-icon.png?v=3",
   },
   openGraph: {
     type: "website",

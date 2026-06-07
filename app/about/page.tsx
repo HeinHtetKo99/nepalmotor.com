@@ -62,11 +62,11 @@ export default function AboutPage() {
       <div className="space-y-5 pb-2">
         <section className="rounded-[20px] border border-sky-200 bg-sky-50 px-5 py-8 text-center">
           <Image
-            src="/logo.jpeg"
+            src="/logo.png"
             alt=""
             width={72}
             height={72}
-            className="mx-auto mb-3.5 h-[72px] w-[72px] rounded-full border-2 border-sky-700 object-cover"
+            className="mx-auto mb-3.5 h-[72px] w-[72px] rounded-full object-cover"
             priority
           />
           <p className="text-[26px] font-black text-sky-800">NEPAL Motor</p>

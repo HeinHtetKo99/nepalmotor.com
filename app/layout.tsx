@@ -63,9 +63,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} h-full antialiased`}
     >
+      <head>
+        <OneSignalInit />
+      </head>
       <body className="min-h-full flex flex-col">
         <GoogleAnalytics />
-        <OneSignalInit />
         <OtpVerificationProvider>{children}</OtpVerificationProvider>
       </body>
     </html>

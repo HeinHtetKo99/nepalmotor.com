@@ -256,8 +256,12 @@ body {
 }
 
 @media (max-width: 768px) {
-  #onesignal-slidedown-container {
+  #onesignal-slidedown-container,
+  #onesignal-bell-launcher {
     bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  #onesignal-slidedown-container {
     left: 0 !important;
     right: 0 !important;
     padding-left: 12px;
